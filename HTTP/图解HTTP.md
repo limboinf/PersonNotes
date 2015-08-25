@@ -48,28 +48,55 @@ HTTP协议通过客户端(request)，服务器端(response)实现网络通信
 ![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/TOP3HTTP报文内HTTP信息.png)
 
 ## 1.请求报文
-![](http://dl.iteye.com/upload/attachment/0069/3485/1a4e7e6a-6d7b-38f1-af8a-043140034c8f.jpg)
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/1a4e7e6a-6d7b-38f1-af8a-043140034c8f.jpg)
 
 下面是一个实际请求：
 
-![](http://dl.iteye.com/upload/attachment/0069/3451/412b4451-2738-3ebc-b1f6-a0cc13b9697b.jpg)
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/412b4451-2738-3ebc-b1f6-a0cc13b9697b.jpg)
 
-![](http://dl.iteye.com/upload/attachment/0069/3487/cdc4dbbb-f98e-31d5-8270-3c37bf1c54e5.jpg)
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/cdc4dbbb-f98e-31d5-8270-3c37bf1c54e5.jpg)
 
 ## 2.响应报文
-![](http://dl.iteye.com/upload/attachment/0069/3489/0236098f-1a98-3a4f-ba6c-4a44c6ec4ed0.jpg)
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/0236098f-1a98-3a4f-ba6c-4a44c6ec4ed0.jpg)
 
 以下是一个实际的HTTP响应报文： 
 
-![](http://dl.iteye.com/upload/attachment/0069/3492/bddb00b6-a3e1-3112-a4f4-4b3cb8687c70.jpg)
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/bddb00b6-a3e1-3112-a4f4-4b3cb8687c70.jpg)
 
 # TOP4:返回结果的HTTP状态码
 
 ![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/http1.jpg)
 # TOP5: 与HTTP协作的Web服务器
 
-# 参考
-[1.HTTP报文详解](http://lvwenwen.iteye.com/blog/1570468)
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/TOP5与HTTP协作的Web服务器.png)
+
+# TOP6:HTTP首部
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/TOP6HTTP首部.png)
+## 1.通用首部字段
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/header1.png)
+## 2.请求首部字段
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/header2.png)
+## 3.响应首部字段
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/header3.png)
+## 4.实体首部字段
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/header4.png)
+## 5.为 Cookie 服务的首部字段
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/header5.png)
+
+# TOP7:确保Web安全的Https
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/TOP7确保Web安全的Https.png)
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/img_0137.png)
+
+# TOP8:确认访问用户身份的认证
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/TOP8确认访问用户身份的认证.png)
+
+# TOP9:基于HTTP的功能追加协议
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/TOP9基于HTTP的功能追加协议.png)
+
+**注：TOP10,TOP11略过**
+
 
 
 
