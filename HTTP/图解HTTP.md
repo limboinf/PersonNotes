@@ -44,6 +44,33 @@ HTTP协议通过客户端(request)，服务器端(response)实现网络通信
 
 ![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/HTTP_pipelining.png)
 
+# TOP3:HTTP报文内HTTP信息
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/TOP3HTTP报文内HTTP信息.png)
+
+## 1.请求报文
+![](http://dl.iteye.com/upload/attachment/0069/3485/1a4e7e6a-6d7b-38f1-af8a-043140034c8f.jpg)
+
+下面是一个实际请求：
+
+![](http://dl.iteye.com/upload/attachment/0069/3451/412b4451-2738-3ebc-b1f6-a0cc13b9697b.jpg)
+
+![](http://dl.iteye.com/upload/attachment/0069/3487/cdc4dbbb-f98e-31d5-8270-3c37bf1c54e5.jpg)
+
+## 2.响应报文
+![](http://dl.iteye.com/upload/attachment/0069/3489/0236098f-1a98-3a4f-ba6c-4a44c6ec4ed0.jpg)
+
+以下是一个实际的HTTP响应报文： 
+
+![](http://dl.iteye.com/upload/attachment/0069/3492/bddb00b6-a3e1-3112-a4f4-4b3cb8687c70.jpg)
+
+# TOP4:返回结果的HTTP状态码
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/http1.jpg)
+# TOP5: 与HTTP协作的Web服务器
+
+# 参考
+[1.HTTP报文详解](http://lvwenwen.iteye.com/blog/1570468)
+
 
 
 
