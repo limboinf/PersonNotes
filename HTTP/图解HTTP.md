@@ -24,7 +24,7 @@ HTTP协议通过客户端(request)，服务器端(response)实现网络通信
 
 请求报文：
 
-![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/requests.png)
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/request.png)
 
 响应报文：
 
