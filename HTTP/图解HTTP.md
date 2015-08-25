@@ -9,3 +9,43 @@
 
 # TOP1:了解web及网络基础
 
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/TOP1%3A了解web及网络基础.png)
+
+对于与HTTP相关的协议如TCP,IP,DNS,ARP等，它们之间协作关系如下：
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/http_tcp_dns_arp.png)
+
+
+# TOP2:简单的HTTP协议
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/TOP2简单的HTTP协议.png)
+
+## 1.请求与响应
+HTTP协议通过客户端(request)，服务器端(response)实现网络通信
+
+请求报文：
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/requests.png)
+
+响应报文：
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/reponses.png)
+
+## 2.HTTP非持久连接和持久连接
+
+>HTTP既可以使用非持久连接（nonpersistent connection），也可以使用持久连接（persistent connection）。HTTP/1.0使用非持久连接，HTTP/1.1默认使用持久连接。
+
+[HTTP持久连接](https://zh.wikipedia.org/wiki/HTTP%E6%8C%81%E4%B9%85%E8%BF%9E%E6%8E%A5)（HTTP persistent connection，也称作HTTP keep-alive或HTTP connection reuse）是**使用同一个TCP连接来发送和接收多个HTTP请求/应答，而不是为每一个新的请求/应答打开新的连接的方法**。
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/HTTP_persistent_connection.png)
+
+
+## 3.HTTP管线化
+[HTTP管线化](https://zh.wikipedia.org/wiki/HTTP%E7%AE%A1%E7%B7%9A%E5%8C%96):HTTP pipelining,将多个HTTP请求整批提交，而在发送过程中不需先等待服务端的回应。
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/HTTP/media/HTTP_pipelining.png)
+
+
+
+
+
+
