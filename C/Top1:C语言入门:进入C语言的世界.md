@@ -74,11 +74,11 @@ printf格式化输出，语法格式如下：
 	[标志][输出最小宽度][.精度][长度]类型。
 
 ## 1 类型
-![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/C/media/printf_1.jpg)
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/C/media/printf_1.png)
 
 ## 2.标志
 
-![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/C/media/printf_2.jpg)
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/C/media/printf_2.png)
 
 ## 3.输出最小宽度
 十进制表示， 多则补空格或0， 少则实际输出
