@@ -175,3 +175,139 @@
 ![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/C/media/top12_1.png)
 
 
+## 2.3 互斥锁
+如果想防止两个或多个线程访问共享数据资源,可以像增设红绿灯一样，即**互斥锁**（有时也叫锁）。这样两个线程就不能同时读取相同数据,并把它写回。
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/C/media/top12_2.png)
+
+### 2.3.1 创建互斥锁：
+
+	pthread_mutex_t a_lock = PTHREAD_MUTEX_INITIALIZER;
+
+>互斥锁必须对所有可能发生冲突的线程可见,也就是说它是一个全局变量。PTHREAD_MUTEX_INITIALIZER实际上是一个宏,当编译器看到它,就会插入创建互斥锁的代码。
+
+	pthread_mutex_lock(&a_lock);		//一次只有一个线程可以通过这里
+	/* 含有共享数据的代码从这里开始 */
+	/* ...代码结束了 */ 
+	pthread_mutex_unlock(&a_lock);
+
+### 2.3.2 把long值传给线程函数
+线程函数可以接收一个void指针作为参数,并返回一个void指针值。通常你希望把某个整型值传给线程,并让它返回某个整型值, 一种方法是用long,因为它的大小和void指针相同,可以把它保
+存在void指针变量中。
+
+	#include <stdio.h>
+	#include <string.h>
+	#include <errno.h>
+	#include <stdlib.h>
+	#include <unistd.h>
+	#include <pthread.h>
+
+	void* do_stuff(void *param) //线程函数可以接收一个void指针类型的参数
+	{
+		long thread_no = (long)param;	//转换为long
+		printf("Thread number:%ld\n", thread_no);
+		return (void*)(thread_no+1);  //返回是将其转换为void指针
+	}
+
+	int main()
+	{
+		pthread_t threads[3];
+		long t;
+		for(t=0;t<3;t++){
+			pthread_create(&threads[t], NULL, do_stuff, (void*)t);  //将long类型变量转换为void指针
+		}
+		void* result;
+		for(t=0;t<3;t++){
+			pthread_join(threads[t], &result);
+			printf("Thread %ld return %ld\n", t, (long)result);	// 在使用前先把它转换long
+		}
+		return 0;
+	}
+
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/C/media/top12_3.png)
+
+### 2.3.3 完善性实例
+
+	#include <stdio.h>
+	#include <string.h>
+	#include <errno.h>
+	#include <stdlib.h>
+	#include <unistd.h>
+	#include <pthread.h>
+
+	void error(char *msg)
+	{
+		fprintf(stderr, "%s. %s", msg, strerror(errno));
+		exit(1);
+	}
+
+	int beers = 2000000;
+	//创建线程锁
+	pthread_mutex_t beers_lock = PTHREAD_MUTEX_INITIALIZER;
+	void* drink_lots(void *a)
+	{
+		int i;
+		pthread_mutex_lock(&beers_lock);
+		for(i=0; i< 100000; i++){
+			beers = beers - 1;
+		}
+		pthread_mutex_unlock(&beers_lock);
+		printf("beers = %i\n", beers);
+		return NULL;
+	}
+
+	int main(int argc, char *argv[])
+	{
+		pthread_t threads[20];
+		int t;
+		printf("%i bottles of beer on the wall\n%i bottles of beer\n", beers, beers);
+		for(t=0; t<20;t++){
+			//创建20个线程
+			if(pthread_create(&threads[t], NULL, drink_lots, NULL) == -1){
+				error("无法创建线程");
+			}
+		}
+		//函数返回的void指针会保持在这里
+		void* result;
+		for(t=0;t<20;t++){
+			if(pthread_join(threads[t], &result) == -1){
+				error("无法收回线程");
+			}
+		}
+		printf("There are now %i bottles of beer on the wall\n", beers);
+		return 0;
+	}
+
+
+然后运行下看看吧：
+
+	➜  intoC git:(master) ✗ gcc thread2.c -lpthread -o thread2
+	➜  intoC git:(master) ✗ ./thread2 
+	2000000 bottles of beer on the wall
+	2000000 bottles of beer
+	beers = 1900000
+	beers = 1800000
+	beers = 1700000
+	beers = 1600000
+	beers = 1500000
+	beers = 1400000
+	beers = 1300000
+	beers = 1200000
+	beers = 1100000
+	beers = 1000000
+	beers = 900000
+	beers = 800000
+	beers = 700000
+	beers = 600000
+	beers = 500000
+	beers = 400000
+	beers = 300000
+	beers = 200000
+	beers = 100000
+	beers = 0
+	There are now 0 bottles of beer on the wall
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/C/media/top12_4.png)
+
+
