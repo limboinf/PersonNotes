@@ -24,6 +24,7 @@
 
 - 返回值总为int(早期ANSI C标准,main()函数可以是void类型，但在C99中必须int类型)
 - 返回值0表示successed, 其他值表示出了问题
+
 # 三.gcc
 gcc是GNU推出的基于C/C++的编译器,俺们来看看它的命令
 

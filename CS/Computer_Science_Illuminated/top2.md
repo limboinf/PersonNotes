@@ -82,6 +82,65 @@ top2: 二进制数值和计数系统
 
 ![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/CS/media/cs10.png)
 
+
+如下实例：十进制转其他任意进制：
+
+
+	#include <stdio.h>
+
+	// 十进制整数转其他进制
+	void dec_inter2other()
+	{
+	    int i=0, m, n, r, a[40];                // m:十进制整数， r:进制， a:40位，一般的十进制整数大概范围
+	    char str[16] ="0123456789ABCDEF";       // 列举所有进制对应的字符
+	    scanf("%d %d", &m, &r);
+	    m = m > 0 ? m : -m;                     // 负数变正数
+	    
+	    do{
+	        a[i++] = m % r; // 取余
+	        printf("i=%d,取余:%d\n", i, m%r);
+	        m = m / r;      // 取商，也就是下一位的被除数
+	        printf("下一步的被除数：m=%d\n", m);
+	    }while (m > 0);
+	    
+	    for (n=i-1; n>=0; n--) {        // 倒序循环打印a数组元素
+	        printf("%c", str[a[n]]);    // %c 一定要对应字符类型
+	    }
+	}
+
+	// 十进制小数转其他进制
+	void dec_point2other()
+	{
+	    // 乘2正序取整法
+	    int i=0, n, r, a[40];
+	    float m;
+	    char str[16] = "0123456789ABCDEF";
+	    scanf("%f %d", &m, &r);
+	    m = m>1 ? 0: m >0 ? m: -m;
+	    while (m != 0) {
+	        a[i++] = (int)(m * r);
+	        printf("乘积取整：%d\n", (int)(m * r));
+	        m = m * r - (int)(m * r);
+	        printf("下一步的乘数:%f\n",m);
+	    };
+	    
+	    // 十进制小数转换为其他进制也为小数，注意要加上它
+	    
+	    for (n=0; n<i; n++) {
+	        printf("%c", str[a[n]]);
+	    }
+	}
+
+
+	int main(int argc, char *argv[]) {
+	    dec_point2other();
+	    return 0;
+	}
+
+# 四. 二进制转8，16进制 以及 八进制转2，16进制 以及 十六进制转2，8进制
+
+原则都是：**先转10进制，然后再转其他进制**
+
 # 四.二进制数值与计算机
 
 - 位(bit): 一个存储单元，二进制数字的简称
