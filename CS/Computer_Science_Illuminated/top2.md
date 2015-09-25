@@ -83,7 +83,7 @@ top2: 二进制数值和计数系统
 ![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/CS/media/cs10.png)
 
 
-如下实例：十进制转其他任意进制：
+实例1：十进制转其他任意进制：
 
 
 	#include <stdio.h>
@@ -137,9 +137,115 @@ top2: 二进制数值和计数系统
 	    return 0;
 	}
 
+
 # 四. 二进制转8，16进制 以及 八进制转2，16进制 以及 十六进制转2，8进制
 
 原则都是：**先转10进制，然后再转其他进制**
+
+实例2： 二进制转其他进制
+
+	// 二进制转其他任意进制
+	// 二进制转10，8，16进制, 都采用按权相加
+	void bin2other()
+	{
+	    int i=0, r, a=0;
+	    char bin[40];
+	    scanf("%s %d", bin, &r);
+	    //unsigned long n = strlen(bin);
+	    int n = (int)(strlen(bin));
+	    for (n-=1; bin[n] != '\0'; n--) {
+	        i++;
+	        if (bin[n] == '1') {
+	            a += pow(2, i-1);
+	        }
+	    }
+	    
+	    printf("十进制：%d\n", a);
+	    
+	    // 转换其他进制
+	    int j=0, others[40], k;
+	    char str[16] = "0123456789ABCDEF";
+	    if (r != 10) {
+	        do{
+	            others[j++] = a % r;    // 取余
+	            a = a / r;              // 取商，也就是下一位的被除数
+	        }while (a > 0);
+	        
+	        for (k=j-1; k>=0; k--) {        // 倒序循环打印a数组元素
+	            printf("%c", str[others[k]]);    // %c 一定要对应字符类型
+	        }
+
+	    }
+	}
+
+
+实例3：八进制转其他进制
+
+	// 八进制转其他进制
+	// 八进制转10，2，16
+	void oct2other()
+	{
+	    int i=0, r, a=0;
+	    char oct[40];
+	    scanf("%s %d", oct, &r);
+	    int n = (int)(strlen(oct));
+	    //先将八进制转10进制
+	    for (n-=1; oct[n] != '\0'; n--) {
+	        i++;
+	        if (oct[n] != '0') {
+	            switch (oct[n]) {
+	                case '1':
+	                    a += pow(8, i-1);
+	                    break;
+	                case '2':
+	                    a += 2*(pow(8, i-1));
+	                    break;
+	                case '3':
+	                    a += 3*(pow(8, i-1));
+	                    break;
+	                case '4':
+	                    a += 4*(pow(8, i-1));
+	                    break;
+	                case '5':
+	                    a += 5*(pow(8, i-1));
+	                    break;
+	                case '6':
+	                    a += 6*(pow(8, i-1));
+	                    break;
+	                case '7':
+	                    a += 7*(pow(8, i-1));
+	                    break;
+	                default:
+	                    break;
+	            }
+	        }
+	    }
+	    printf("十进制：%d\n", a);
+	    
+	    // 转换其他进制
+	    int j=0, others[40], k;
+	    char str[16] = "0123456789ABCDEF";
+	    if (r != 10) {
+	        do{
+	            others[j++] = a % r;    // 取余
+	            a = a / r;              // 取商，也就是下一位的被除数
+	        }while (a > 0);
+	        
+	        for (k=j-1; k>=0; k--) {        // 倒序循环打印a数组元素
+	            printf("%c", str[others[k]]);    // %c 一定要对应字符类型
+	        }
+	        
+	    }
+
+	}
+
+	// 同理 十六进制也一样.
+
+
+实例4：十六进制转其他进制
+
+原理同上。
+
 
 # 四.二进制数值与计算机
 
