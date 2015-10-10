@@ -4,7 +4,6 @@
 - 标准输入，标准输出，重定向
 - 命令行选项
 
-
 # 一.标准输入,标准输出，重定向
 在第二节学习了[scanf,fgets函数](https://github.com/BeginMan/BookNotes/blob/master/C/Top2:存储器和指针:指向何方.md), 用于指针输入数据，下面展示一个例子
 
