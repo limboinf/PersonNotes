@@ -17,7 +17,7 @@
 - RARP: 反地址解析协议(Reverse..), 将硬件地址映射成IPv4地址
 - BPF: BSD分组过滤器
 
-# 二. TCP通信过程包括三部曲：建立TCP连接通道，传输数据，断开TCP连接通道
+# 二. TCP通信三部曲
 如下总图：
 
 ![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/tcp-ip-handshark.png)
@@ -62,7 +62,7 @@ TCP涉及连接和断开的操作可由TCP状态转换图来说明.TCP协议的�
 
 ![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/tcp_status.jpeg)
 
-## 2.4.1 状态表：
+### 2.4.1 状态表：
 
 状 态 | 描 述
 ----|------
@@ -83,7 +83,7 @@ LAST ACK | 被动关闭）等待最后一个关闭确认，并等待所有分组
 
 ![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/tcp-ip-handshark.png)
 
-## 2.4.2 TCP连接状态
+### 2.4.2 TCP连接状态
 
 1. CLOSED：起始点，在超时或者连接关闭时候进入此状态，这并不是一个真正的状态，而是这个状态图的假想起点和终点。
 2. LISTEN：服务器端等待连接的状态。服务器经过 socket，bind，listen 函数之后进入此状态，开始监听客户端发过来的连接请求。此称为应用程序被动打开（等到客户端连接请求）
@@ -91,7 +91,7 @@ LAST ACK | 被动关闭）等待最后一个关闭确认，并等待所有分组
 4. SYN_RCVD：第二次握手发生阶段，跟 3 对应，这里是服务器端接收到了客户端的 SYN，此时服务器由 LISTEN 进入 SYN_RCVD状态，同时服务器端回应一个 ACK，然后再发送一个 SYN 即 SYN+ACK 给客户端。状态图中还描绘了这样一种情况，当客户端在发送 SYN 的同时也收到服务器端的 SYN请求，即两个同时发起连接请求，那么客户端就会从 SYN_SENT 转换到 SYN_REVD 状态。
 5. ESTABLISHED：第三次握手发生阶段，客户端接收到服务器端的 ACK 包（ACK，SYN）之后，也会发送一个 ACK 确认包，客户端进入 ESTABLISHED 状态，表明客户端这边已经准备好，但TCP 需要两端都准备好才可以进行数据传输。服务器端收到客户端的 ACK 之后会从 SYN_RCVD 状态转移到 ESTABLISHED 状态，表明服务器端也准备好进行数据传输了。这样客户端和服务器端都是 ESTABLISHED 状态，就可以进行后面的数据传输了。所以 ESTABLISHED 也可以说是一个数据传送状态。
 
-## 2.4.3 TCP断开状态
+### 2.4.3 TCP断开状态
 
 1. FIN_WAIT_1：第一次挥手。主动关闭的一方（执行主动关闭的一方既可以是客户端，也可以是服务器端，这里以客户端执行主动关闭为例），终止连接时，发送 FIN 给对方，然后等待对方返回 ACK 。调用 close() 第一次挥手就进入此状态。
 2. CLOSE_WAIT：接收到FIN 之后，被动关闭的一方进入此状态。具体动作是接收到 FIN，同时发送 ACK。之所以叫 CLOSE_WAIT 可以理解为被动关闭的一方此时正在等待上层应用程序发出关闭连接指令。前面已经说过，TCP关闭是全双工过程，这里客户端执行了主动关闭，被动方服务器端接收到FIN 后也需要调用 close 关闭，这个 CLOSE_WAIT 就是处于这个状态，等待发送 FIN，发送了FIN 则进入 LAST_ACK 状态。
@@ -103,11 +103,64 @@ LAST ACK | 被动关闭）等待最后一个关闭确认，并等待所有分组
 	- 由FIN_WAIT_1进入：发起关闭后，发送了FIN，等待ACK的时候，正好被动方（服务器端）也发起关闭请求，发送了FIN，这时客户端接收到了先前ACK，也收到了对方的FIN，然后发送ACK（对对方FIN的回应），与CLOSING进入的状态不同的是接收到FIN和ACK的先后顺序。
 	- 由FIN_WAIT_2进入：这是不同时的情况，主动方在完成自身发起的主动关闭请求后，接收到了对方发送过来的FIN，然后回应 ACK。
 
+## 2.5 观察分组(Watching the Packets)
+
+如下图展示完整的tcp分组过程包括连接，传输和终止。
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/pocktes.png)
+
+## 2.6 TIME_WAIT状态
+这是TCP网络编程中比较难理解且又重要的一个状态，这里我参考[网络编程释疑之：TCP的TIME_WAIT状态在服务器开发中的影响？](http://yaocoder.blog.51cto.com/2668309/1338567) 这篇文章：
+
+**高并发TCP服务器中进行主动关闭的一方最好是客户端、服务器端程序最好启用SO_REUSEADDR选项**
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/203639589.jpg)
+
+可以看出TIME_WAIT状态是执行主动关闭的那一端产生的。
+
+**TIME_WAIT状态有两个存在的理由**:
+
+1. 可靠地实现TCP全双工连接的终止；
+2. 允许老的重复分节在网络中消逝；
+
+第一个理由参考上图。 假设主动关闭端最终发送的ACK丢失了。对端将重新发送FIN，主动关闭端只有在维护状态信息的情况下才可以重新发送最终的那个ACK。如果不维护这个状态信息，主动关闭端将会响应一个`RST`，对端会将此响应标记为错误，所以**不能进行正常的关闭**。
+
+第二个理由假设我们在ip A:端口B主机和ip C:端口D主机之间建立一个TCP连接。我们关闭这个连接，过一段时间在相同的IP地址和端口之间建立另一个连接。由于他们的IP地址和端口号都相同，所以如果上一个连接的老的重复分组再出现会影响新的连接。为了做到这一点，TCP将不会给处于TIME_WAIT状态的连接发起这个新的连接。这个持续时间如果大于**MSL**（IP数据报在因特网中的最大生存时间）
+
+如果要满足以上实现，TIME_WAIT状态必须要有一定的持续时间，所以TIME_WAIT也被称为**2MSL等待状态**，一般持续时间在**1分钟到4分钟之间**。
+
+**高并发TCP服务器中进行主动关闭的一方最好是客户端**：因为对于高并发服务器来说文件描述符资源是很重要的资源，如果对于每一个连接都要经历TIME_WAIT这个2MSL的时长，势必造成资源不能立马复用的浪费。虽然对于客户端来说TIME_WAIT状态会占用端口和句柄资源，但是客户端一般很少有并发资源限制，所以客户端执行主动关闭是比较合适的。
+
+**服务器端程序最好启用SO_REUSEADDR选项**：我们想这样做一种情况，如果生产环境中服务端程序由于某种错误操作关闭了，我们肯定是要立马重启服务程序，但是TIME_WAIT还在占用着这些地址端口资源让你的服务起不来，那你着不着急。SOREUSEADDR这个选项正是允许地址端口的重复绑定。
+
+## 2.7 端口号
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/ports.png)
+
+## 2.8 套接字对
+一个 TCP 连接由一个套接字对( Socketpair )标识,套接字对是表示 TCP 连接的两个端点的四元组: (本地 IP 地址,本地 TCP 端口号;远程 IP 地址,远程 TCP 端口号)
+
+标识两个端点的两个值(IP地址和端口号)称为**套接字**
+
+## 2.8 缓冲区大小和限制
+主要讲IP数据报大小的限制。
+
+- IPv4 数据报最大大小为2的16次方-1， 65535个字节(64K),这里面还包含IPv4的首部，总长度字段占16位
+- IPv6 数据报最大为65575(在IPv4基础上加40), 包括40字节的IPv6首部，IPv6净荷长度字段占16位，其还有特大净荷选项能扩展至32位，这个选项需要**最大传输单元(maximum transmission unit (`MTU`))超过65535的数据链路提供支持**。
+- 许多网络有一个可由硬件规定的MTU，如以太网MTU为1500字节
+- 路径MTU
+- 当一个IP数据报从某个接口送出时，如果大小超过相应链路的MTU则IPv4和IPv6要进行**分片**
+- 最小重组缓冲区大小，是IPv4和IPv6定义的最小数据报大小
+- MSS,最大分节大小，告诉对端每个分节最大能发送的TCP数据量
+
+
+
+参考：
 
 - [ 【Unix 网络编程】TCP状态转换图详解](http://blog.csdn.net/wenqian1991/article/details/40110703)
 - [TCP连接释放与TCP状态图 ](http://blog.sina.com.cn/s/blog_417b97470100ohv1.html)
 
- 
+
 
 
 
