@@ -123,6 +123,7 @@ IPv4套接字地址结构，以`sockaddr_in`命名，定义在`<netinet/in.h>`�
 我们需要处理像IP地址这样的字段，此字段可能包含0个字节，却并不是C字符串。对于字符串：以空字符串结尾的C字符串通过`<string.h>`定义，并由`str`(表示字符串)开头的函数处理
 
 对于字节，有两组操纵函数：
+
 1. 以b开头(表示字节)的函数, 如`bzero`,`bcopy`,`bcmp`
 2. 以mem(表示内存)开头的函数，如`memset`,`memcpy`, `memcmp`
 
@@ -130,6 +131,7 @@ IPv4套接字地址结构，以`sockaddr_in`命名，定义在`<netinet/in.h>`�
 将在ASCII字符串与网络字节序的二进制值(存放在套接字地址结构中的值)之间转换网际地址。有如下两组：
 
 - `inet_aton`,`inet_addr`和`inet_ntoa`在点分十进制数串(如201.33.211.89)与它32位网络字节序二进制值间转换IPv4地址
+- `inet_pton`和`inet_ntop`比较新，对于IPv4和IPv6都适用,p代表表达，n代表数值;书中有大量的解释，这里暂且泛读。
 
 	#include <arpa/inet.h>
 	/*将strptr所指的C字符串转换为32位网络字节序二进制，并通过指针addrptr来存储*/
@@ -142,7 +144,7 @@ IPv4套接字地址结构，以`sockaddr_in`命名，定义在`<netinet/in.h>`�
 	/*返回：指向点分十进制数串的指针*/
 	char *inet_ntoa(struct in_addr inaddr);
 
-- `inet_pton`和`inet_ntop`比较新，对于IPv4和IPv6都适用,p代表表达，n代表数值;书中有大量的解释，这里暂且泛读。
+
 
 `inet_ntop`调用必须要知道这个结构的格式和地址族，如：
 
