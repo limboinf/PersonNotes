@@ -110,5 +110,120 @@ IPv4套接字地址结构，以`sockaddr_in`命名，定义在`<netinet/in.h>`�
 
 ![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/kernel_to_process.png)
 
+关于值-结果参数要明白：**用指针传递， 这样它的值可以被函数更改**。
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/value_result_param.png)
+
+
+# 三.字节排序函数
+
+可参考我这一篇文章：[Unix网络编程之理解Socket与字节序](http://beginman.cn/unp/2015/10/15/unp-socket/)
+
+# 四.字节操纵函数
+我们需要处理像IP地址这样的字段，此字段可能包含0个字节，却并不是C字符串。对于字符串：以空字符串结尾的C字符串通过`<string.h>`定义，并由`str`(表示字符串)开头的函数处理
+
+对于字节，有两组操纵函数：
+1. 以b开头(表示字节)的函数, 如`bzero`,`bcopy`,`bcmp`
+2. 以mem(表示内存)开头的函数，如`memset`,`memcpy`, `memcmp`
+
+# 五.地址转换函数
+将在ASCII字符串与网络字节序的二进制值(存放在套接字地址结构中的值)之间转换网际地址。有如下两组：
+
+- `inet_aton`,`inet_addr`和`inet_ntoa`在点分十进制数串(如201.33.211.89)与它32位网络字节序二进制值间转换IPv4地址
+
+	#include <arpa/inet.h>
+	/*将strptr所指的C字符串转换为32位网络字节序二进制，并通过指针addrptr来存储*/
+	/*成功则返回1，否则返回0*/
+	int inet_aton(const char *strptr, struct in_addr *addrptr);
+
+	/*返回：如果字符串有效则为32位二进制网络字节序的IPv4地址，否则为INADDR_NONE*/
+	int_addr_t inet_addr(const char *strptr);
+
+	/*返回：指向点分十进制数串的指针*/
+	char *inet_ntoa(struct in_addr inaddr);
+
+- `inet_pton`和`inet_ntop`比较新，对于IPv4和IPv6都适用,p代表表达，n代表数值;书中有大量的解释，这里暂且泛读。
+
+`inet_ntop`调用必须要知道这个结构的格式和地址族，如：
+
+	/*IPv4*/
+	struct sockaddr_in addr;
+	inet_ntop(AF_INET, &addr.sin_addr, str, sizeof(str))
+
+这使得与协议有关了，书中自行编写一个名为`sock_ntop`(非标准系统函数)来解决这个问题。
+
+# 六.readn,writen和readline函数
+字节流套接字上的read和write函数所表现的行为不同于通常的文件I/O.字节流套接字上调用read或write输入或输出的字节数可能比请求的数量少,然而这不是出错状态.这个现象的原因在于**内核中用于套接字的缓冲区可能已经达到了极限**.此时所需的是调用者再次调用read个write函数,以输入或输出剩余的字节. 我们提供的以下三个函数是每当我们读或写一个字节流套接字时要使用的函数.
+
+	//从一个描述符读取n个字节
+	ssize_t readn(int fd, void* vptr, size_t n)
+	{
+	 size_t  nleft = n;  //记录还剩下多少字节数没读取
+	 ssize_t nread;      //记录已经读取的字节数
+	 char*  ptr = vptr;  //指向要读取数据的指针
+	 while(nleft > 0)    //还有数据要读取
+	 {
+	  if(nread = read(fd,ptr,nleft) < 0)
+	   if(erron == EINTR)//系统被一个捕获的信号中断
+	    nread = 0;       //再次读取
+	   else
+	    return -1;       //返回
+	  else if(nread == 0)//没有出错但是也没有读取到数据
+	   break;            //再次读取
+	  nleft -= nread;    //计算剩下未读取的字节数
+	  ptr  += nread;     //移动指针到以读取数据的下一个位置
+	 }
+	 return (n-nleft);   //返回读取的字节数
+	}
+	/**************************************************************************************************/
+	//从一个描述符读文本行,一次一个字节
+	ssize_t readline(int fd, void* vptr, size_t maxlen)//一个字节一个字节地读取
+	{
+	 ssize_t  rc;        //每次读取的字符
+	 ssize_t  n;         //读取的次数也即读取字符串的长度
+	 char     c;         //
+	 char* ptr = vptr;   //指向要读取的数据的指针
+	 for(n = 1;n < maxlen; n++)
+	 {
+	  again:
+	  if((rc = read(fd,&c,1)) == 1)
+	  {
+	   *ptr++ = c;       //移动指针
+	   if(c == '\n')     //换行符
+	    break;           //跳出循环
+	   else if(rc == 0)  //结束
+	    *ptr = 0;        //字符串以0结尾
+	   return (n-1);     //返回读取的字节数 末尾的0不算
+	  }
+	  else
+	  {
+	   if(erron == EINTR)
+	    goto again;      //重新读取
+	   return (-1)
+	  }
+	 }
+	 *ptr=0;
+	 return n;
+	}
+	/**************************************************************************************************/
+	//往一个描述符写n个字节
+	ssize_t writen(ind fd, const void* vptr, size_t n)
+	{ 
+	 size_t nleft = n;        //还需要写入的字节数 
+	 ssize_t nwritten;        //每次写入的字节数 
+	 const char* ptr = vptr;  //指向要写入的数据的指针 
+	 while(nleft > 0) 
+	 { 
+	  if((nwritten = write(fd,ptr,nleft)) <= 0) 
+	  { 
+	   if(nwritten < 0 && erron == EINTR) 
+	    nwritten = 0; 
+	   else return -1; 
+	  }
+	   nleft -= nwritten;     //计算还需要写入的字节数 
+	 ptr += nwritten;         //移动数据指针 
+	  } 
+	  return n;
+	 }
 
 
