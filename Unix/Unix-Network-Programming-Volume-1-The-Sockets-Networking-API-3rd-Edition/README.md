@@ -59,14 +59,14 @@
 
 - [x] 3.1 概述	56
 - [x] 3.2 套接字地址结构	56
-- [x] 3.3 值—结果参数	61 (暂时弄不清楚)
-- [ ] 3.4 字节排序函数	63
-- [ ] 3.5 字节操纵函数	66
-- [ ] 3.6 inet_aton、inet_addr和inet_ntoa函数	67
-- [ ] 3.7 inet_pton和inet_ntop函数	68
-- [ ] 3.8 sock_ntop和相关函数	70
-- [ ] 3.9 readn、writen和readline函数	72
-- [ ] 3.10 小结	76
+- [x] 3.3 值—结果参数	61
+- [x] 3.4 字节排序函数	63
+- [x] 3.5 字节操纵函数	66
+- [x] 3.6 inet_aton、inet_addr和inet_ntoa函数	67
+- [x] 3.7 inet_pton和inet_ntop函数	68
+- [x] 3.8 sock_ntop和相关函数	70
+- [x] 3.9 readn、writen和readline函数	72
+- [x] 3.10 小结	76
 - [ ] 习题	76
 
 ### 第4章 基本tcp套接字编程	77
