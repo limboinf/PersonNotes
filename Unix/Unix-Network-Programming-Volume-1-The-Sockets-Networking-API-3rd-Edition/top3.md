@@ -3,7 +3,7 @@
 首先从**套接字地址结构**开始
 
 # 一.套接字地址结构
-socket functions require a pointer(指针) to a socket address structure as an argument.每个协议都定义了它字节的套接字地址结构。都以`sockaddr_`开头，并对应每个协议族的唯一后缀.
+socket functions require a pointer(指针) to a socket address structure as an argument.每个协议都定义了它自己的套接字地址结构。都以`sockaddr_`开头，并对应每个协议族的唯一后缀.
 
 ## 1.1 IPv4套接字地址结构
 
@@ -83,5 +83,32 @@ IPv4套接字地址结构，以`sockaddr_in`命名，定义在`<netinet/in.h>`�
 
 1. 满足最苛刻的套接字地址结构对齐
 2. 足够大
+
+# 二.值-结果参数
+向套接字函数传递套接字地址结构指针，该结构的长度也作为一个参数传递，**传递的方式取决于该结构的传递方向：是从进程到内核，还是从内核到进程**
+
+## 2.1 从进程到内核
+从进程到内核传递套接字地址结构的函数有3个：`bind`、`connect`,`sendto`.这些函数第一个参数是指向某个套接字地址结构的指针，另一个参数是*该结构的整数大小*:
+
+	struct sockaddr_in serv;
+	connect (sockfd, (struct sockaddr *) &serv, sizeof(serv));
+
+**指针和指针所指内容的大小都告诉了内核，内核就知道从进程中复制多少数据来：**
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/process_to_kernel.png)
+
+## 2.2 从内核到进程
+
+从内核到进程传递套接字地址结构的函数有4个：`accept`,`recvfrom`,`getsockname`,`getpeername`，需要两个参数，一个同上是指针，另一个则是**指向表示该结构大小的整数变量的指针**：
+
+	struct sockaddr_un cli;			/*Unix domain*/
+	socklen_t len;
+
+	len = sizeof(cli);				/*len is a value*/
+	getpeername(unixfd, (struct sockaddr *) &cli, &len)	 /*注意这里是 &len*/
+	/* len may have changed */
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/kernel_to_process.png)
+
 
 
