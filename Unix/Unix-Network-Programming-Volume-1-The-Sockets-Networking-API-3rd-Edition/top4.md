@@ -3,7 +3,7 @@
 - 完成整个TCP客户/服务端程序所需的所有基本套接字函数
 - 并发服务器，这里只考虑`frok`出对付每个客户请求的单进程模型
 
-# 一.TCP客户与服务器之间发生的一些典型的事件时间表
+# 一.TCP客户与服务器发生的典型事件时间表
 
 ![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/tcp_process.png)
 
@@ -111,6 +111,8 @@ listen仅仅由TCP服务器调用，它做两件事：
 3. 未完成队里中的任意一项并非长时间保存，有一个留存时间(`RTT`),对于web服务器，Client与单服务器之间的中值RTT是187ms
 4. 许多系统允许修改最大backlog， 如下我们通过一个包裹函数来通过环境变量自定义backlog大小
 
+如下包裹函数：
+	
 	void Listen(int fd, int backlog)		/*包裹函数一般与之同名，只不过第一个字母往往大写*/
 	{
 		char *ptr;
