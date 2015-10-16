@@ -71,15 +71,15 @@
 
 ### 第4章 基本tcp套接字编程	77
 
-- [ ] 4.1 概述	77
-- [ ] 4.2 socket函数	77
-- [ ] 4.3 connect函数	80
-- [ ] 4.4 bind函数	81
-- [ ] 4.5 listen函数	84
-- [ ] 4.6 accept函数	88
-- [ ] 4.7 fork和exec函数	90
-- [ ] 4.8 并发服务器	91
-- [ ] 4.9 close函数	93
+- [x] 4.1 概述	77
+- [x] 4.2 socket函数	77
+- [x] 4.3 connect函数	80
+- [x] 4.4 bind函数	81
+- [x] 4.5 listen函数	84
+- [x] 4.6 accept函数	88
+- [x] 4.7 fork和exec函数	90
+- [x] 4.8 并发服务器	91
+- [x] 4.9 close函数	93
 - [ ] 4.10 getsockname和getpeername函数	94
 - [ ] 4.11 小结	96
 - [ ] 习题	96
