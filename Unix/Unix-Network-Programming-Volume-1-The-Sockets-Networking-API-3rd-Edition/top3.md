@@ -130,8 +130,7 @@ IPv4套接字地址结构，以`sockaddr_in`命名，定义在`<netinet/in.h>`�
 # 五.地址转换函数
 将在ASCII字符串与网络字节序的二进制值(存放在套接字地址结构中的值)之间转换网际地址。有如下两组：
 
-- `inet_aton`,`inet_addr`和`inet_ntoa`在点分十进制数串(如201.33.211.89)与它32位网络字节序二进制值间转换IPv4地址
-- `inet_pton`和`inet_ntop`比较新，对于IPv4和IPv6都适用,p代表表达，n代表数值;书中有大量的解释，这里暂且泛读。
+(1). `inet_aton`,`inet_addr`和`inet_ntoa`在点分十进制数串(如201.33.211.89)与它32位网络字节序二进制值间转换IPv4地址
 
 	#include <arpa/inet.h>
 	/*将strptr所指的C字符串转换为32位网络字节序二进制，并通过指针addrptr来存储*/
@@ -144,7 +143,7 @@ IPv4套接字地址结构，以`sockaddr_in`命名，定义在`<netinet/in.h>`�
 	/*返回：指向点分十进制数串的指针*/
 	char *inet_ntoa(struct in_addr inaddr);
 
-
+(2). `inet_pton`和`inet_ntop`比较新，对于IPv4和IPv6都适用,p代表表达，n代表数值;书中有大量的解释，这里暂且泛读。
 
 `inet_ntop`调用必须要知道这个结构的格式和地址族，如：
 
