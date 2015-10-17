@@ -153,7 +153,43 @@ listen仅仅由TCP服务器调用，它做两件事：
 
 对于父、子进程间**共享状态**信息，进程有一个非常清晰的模型：**共享文件表**，但是不共享用户地址空间。进程有独立的地址空间既是优点，也是缺点，这样一来，一个进程不可能不小心覆盖另一个进程的虚拟存储器；另一方面，独立的地址空间使得进程之间共享信息变得更加困难。另外，基于进程的设计另一个缺点是，往往运行比较慢，因为进程控制和IPC开销比较高。
 
-下面是：Unix C实现基于进程的小型并发服务器
+下面是：Unix C实现基于进程的小型并发服务器的轮廓：
+
+	pid_t pid;
+	int listenfd, connfd;
+	listenfd = Socket(....);
+	Bind(listenfd, ...);
+	Listen(listenfd, LISTENQ);
+	for( ; ; ){
+		connfd = Accept(listenfd, ...);		/*可能阻塞*/
+		if( (pid = Fork()) == 0){			/*有accept时则fork一个进程单独处理*/
+			Close(listenfd);				/*子进程关闭监听套接字listenfd*/
+			doit(connfd);					/*处理请求*/
+			Close(connfd);					/*处理结束关闭连接套接字connfd*/
+			exit(0);						/*子进程退出*/	
+		}
+		Close(connfd);						/*父进程关闭已连接的套接字*/
+	}
+
+
+注意：
+
+- 这里首字母大写的都是原函数的包裹函数
+- 父进程close已连接套接字后子进程也需要close已连接套接字
+- 在子进程中close可有可无，因为有exit(0)的存在，它会清理已打开的描述符，是否显式调用，与编程习惯有关
+- 思考为什么要两次close已连接的套接字？
+
+**每一个文件或套接字都有一个引用计数，由文件表维护，所谓引用计数就是打开描述符的个数**。上例中监听套接字listenfd和已连接套接字connfd在`accept`时只有1个，然后`fork`后，这两个描述符在父进程和子进程间共享（也就是被复制），因此它们的访问计数都变成了2，这样一来当父进程close connfd时，它的引用计数为1，该套接字真正的清理和资源释放要等到其引用计数为0时才发生，这会在稍后子进程也close connfd是发生，如下状态图：
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/acc1.png)
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/acc2.png)
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/acc3.png)
+
+![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/acc4.png)
+
+
 
 推荐这篇博客[ **UNIX网络编程——并发服务器（TCP）**](http://blog.csdn.net/ctthuangcheng/article/details/9412791)
 
@@ -166,5 +202,14 @@ listen仅仅由TCP服务器调用，它做两件事：
 	/*Returns: 0 if OK,-1 on error*/
 
 
+如果对某个TCP发送FIN，则可以用`shutdown`函数来代替close.
 
+# 十.getsockname和getpeername函数
+一个返回套接字关联的本地协议地址(getsockname),和外地协议地址(getpeername)。
 
+	#include <sys/socket.h>
+	int getsockname(int sockfd, struct sockaddr *localaddr, socklen_t *addrlen);
+	int getpeername(int sockfd, struct sockaddr *peeraddr, socklen_t *addrlen);
+	/*Both return: 0 if OK, -1 on error*/
+
+这两个函数的最后一个参数都是**值-结果参数**。
