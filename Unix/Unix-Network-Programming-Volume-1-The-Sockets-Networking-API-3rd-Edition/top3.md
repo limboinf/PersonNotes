@@ -29,7 +29,21 @@ IPv4套接字地址结构，以`sockaddr_in`命名，定义在`<netinet/in.h>`�
 - POSIX规范只需要这个结构的3个字段：`sin_family`,`sin_port`,`sin_addr` 
 - POSIX数据类型
 
-![](https://raw.githubusercontent.com/BeginMan/BookNotes/master/Unix/media/posix_datatype.png)
+数据类型|说明|头文件
+----|----|----
+int8_t | 带符号的8位整数 | `<sys/types.h>`
+uint8_t | 无符号的8位整数 | `<sys/types.h>`
+int16_t | 带符号的16位整数 | `<sys/types.h>`
+uint16_t | 无符号的16位整数 | `<sys/types.h>`
+int32_t | 带符号的32位整数 | `<sys/types.h>`
+uint32_t | 无符号的32位整数 | `<sys/types.h>`
+sa_family_t | 套接字地址结构的地址族 | `<sys/socket.h>`
+socklen_t | 套接字地址结构的长度，一般为uint32_t | `<sys/socket.h>`
+in_addr_t | IPv4地址，一般为uint32_t | `<netinet/in.h>`
+in_port_t | TCP或UDP端口，一般为uint16_t | `<netinet/in.h>`
+
+
+
 - `sin_zero`总是设置为0，按照惯例在填写前总是把整个结构置为0，而不单单是sin_zero字段置为0
 
 ## 1.2 通用套接字地址结构
