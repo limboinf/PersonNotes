@@ -7,7 +7,7 @@ main(int argc, char **argv)
 	pid_t				childpid;
 	socklen_t			clilen;
 	struct sockaddr_in	cliaddr, servaddr;
-	void				sig_chld(int);
+	void				sig_chld(int);			// 处理信号量函数， 这里在Mac OS X系统上编译不过
 
 	listenfd = Socket(AF_INET, SOCK_STREAM, 0);
 
@@ -20,8 +20,8 @@ main(int argc, char **argv)
 
 	Listen(listenfd, LISTENQ);
 
-	Signal(SIGCHLD, sig_chld);
-
+	Signal(SIGCHLD, sig_chld);					// 捕获`SIGCHLD`,并调用`wait`或`waitpid`来处理僵死进程
+	
 	for ( ; ; ) {
 		clilen = sizeof(cliaddr);
 		connfd = Accept(listenfd, (SA *) &cliaddr, &clilen);
