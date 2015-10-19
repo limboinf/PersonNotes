@@ -54,7 +54,23 @@ client键入终端EOF字符(Control-D)终止client,期间发生过程如下：
 
 **处理僵死进程的可移植方法就是：捕获`SIGCHLD`,并调用`wait`或`waitpid`。**
 
-书中给出了例子，但是对于信号量的处理书中的例子并没有讲的太清楚，这里先埋坑吧~
+书中给出了[例子](https://github.com/BeginMan/BookNotes/blob/7b242727235c8ebbc6bacb8e3cfd875be2dd8e23/Unix/Unix-Network-Programming-Volume-1-The-Sockets-Networking-API-3rd-Edition/source/unpv13e/tcpcliserv/tcpserv02.c)，但是对于信号量的处理书中的例子并没有讲的太清楚，这里先埋坑吧~
 
 ## 2.2 wait和waitpid函数
+
+	#include <sys/wait.h>
+	pid_t wait(int *statloc);
+	pid_t waitpid(pid_t pid, int *statloc, int options);
+	/*成功则返回进程ID，失败则返回0或-1*/
+
+这两个函数都返回两个值：已终止子进程的ID和通过statloc指针返回的子进程的终止状态。重点是：
+
+1. 理解wait和waitpid函数
+2. 区别wait和waitpid函数
+
+如下给出了[最终版本](https://github.com/BeginMan/BookNotes/blob/7b242727235c8ebbc6bacb8e3cfd875be2dd8e23/Unix/Unix-Network-Programming-Volume-1-The-Sockets-Networking-API-3rd-Edition/source/unpv13e/tcpcliserv/tcpserv04.c), 上述实例主要说明了以下几点：
+
+1. 当fork子进程时，必须捕获SIGCHLD信号
+2. 当捕获信号时，必须处理被中断的系统调用
+3. SIGCHLD的信号处理函数必须正确编写，应该用waitpid函数以免留下僵死进程.
 
