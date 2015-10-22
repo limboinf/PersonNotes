@@ -9,6 +9,7 @@ __date__ = '15/10/22'
 
 import socket
 
+
 def get_remote_machine_info():
     remote_host = "www.python.org"
     try:
@@ -22,4 +23,3 @@ if __name__ == '__main__':
     get_remote_machine_info()
     # outprint:
     # remote host (www.python.org) IP: 103.245.222.223
-
