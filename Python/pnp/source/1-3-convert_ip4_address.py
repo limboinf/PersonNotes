@@ -14,6 +14,7 @@ __date__ = '15/10/22'
 import socket
 from binascii import hexlify
 
+
 def convert_ipv4_address():
     for ip_addr in ['127.0.0.1', '192.168.0.110']:
         packed_ip_addr = socket.inet_aton(ip_addr)          # 打包成32位二进制数据格式
