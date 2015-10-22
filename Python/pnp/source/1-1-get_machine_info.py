@@ -10,6 +10,7 @@ python help 查看函数信息：
 __date__ = '15/10/22'
 import socket
 
+
 def print_machine_info():
     host_name = socket.gethostname()                # 获取主机信息
     ip_address = socket.gethostbyname(host_name)    # 通过主机信息获取IP地址
@@ -22,4 +23,3 @@ if __name__ == '__main__':
     # outprint:
     # Host Name:fangpengdeMacBook-Air.local
     # IP Address:192.168.0.106
-
