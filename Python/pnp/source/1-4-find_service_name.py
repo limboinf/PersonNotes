@@ -29,4 +29,3 @@ if __name__ == '__main__':
     # Port:25 => ServiceName: smtp
     # Port:3306 => ServiceName: mysql
     # port/proto not found
-    # 3306
