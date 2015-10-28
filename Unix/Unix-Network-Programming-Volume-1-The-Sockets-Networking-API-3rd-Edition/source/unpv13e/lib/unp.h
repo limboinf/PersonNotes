@@ -240,6 +240,12 @@ struct sockaddr_storage {
 #define	DIR_MODE	(FILE_MODE | S_IXUSR | S_IXGRP | S_IXOTH)
 					/* default permissions for new directories */
 
+/*函数signal的正常函数原型层次太多
+ *void (*signal(int signo, void(*func)(int)))(int);
+ *为了简化，typedef定义了Sigfunc类型
+ *signal的原型于是变成了：
+ *Sigfunc *signal(int signo, Sigfunc *func);
+ * */
 typedef	void	Sigfunc(int);	/* for signal handlers */
 
 #define	min(a,b)	((a) < (b) ? (a) : (b))
@@ -418,8 +424,12 @@ ssize_t	 Read_fd(int, void *, size_t, int *);
 int		 Readable_timeo(int, int);
 ssize_t	 Recvfrom_flags(int, void *, size_t, int *, SA *, socklen_t *,
 		 struct unp_in_pktinfo *);
+
+/*定义包裹sigaction函数*/
 Sigfunc *Signal(int, Sigfunc *);
 Sigfunc *Signal_intr(int, Sigfunc *);
+/*Signal end*/
+
 int		 Sock_bind_wild(int, int);
 char	*Sock_ntop(const SA *, socklen_t);
 char	*Sock_ntop_host(const SA *, socklen_t);
