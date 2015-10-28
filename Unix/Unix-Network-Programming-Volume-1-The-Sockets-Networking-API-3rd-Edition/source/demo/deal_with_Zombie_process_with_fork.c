@@ -1,3 +1,11 @@
+/*
+ * 通过两次调用fork。
+ * 父进程首先调用fork创建一个子进程然后waitpid等待子进程退出
+ * 子进程再fork一个孙进程后退出。
+ * 这样子进程退出后会被父进程等待回收
+ * 对于孙子进程其父进程已经退出所以孙进程成为一个孤儿进程
+ * 孤儿进程由init进程接管，孙进程结束后，init会等待回收。
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
