@@ -61,3 +61,14 @@ $ sed '1,3s/my/your/g; 3,$s/This/That/g' my.txt
 sed -e '1,3s/my/your/g' -e '3,$s/This/That/g' my.txt
 ```
 
+# Sed 命令
+
+- N命令
+- a: append,如 `sed '$ a hello' my.txt ` 在最后一行添加
+- i: insert ,如`sed "1 i hello" my.txt` 1i表明，其要在第1行前插入一行
+
+还可以模式匹配：`sed "/fish/a hello" my.txt` /fish/a，这意思是匹配到/fish/后就追加一行
+
+- c 替换匹配
+- d 删除匹配， sed '/fish/d' my.txt, sed '2d' my.txt, sed '2, $d' my.txt
+- p 打印
