@@ -30,3 +30,5 @@ $ wc -l data.json
 `grep "class" . -R -n` 递归查找
 
 `grep -e "class" -e "vitural" file` 查找多个
+
+`-E` 选项使用正则，如:`grep -E '[0-9]+'` 或者`egrep [0-9]+` 替代
