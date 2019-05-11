@@ -129,6 +129,22 @@ val l = List(1, 3, 5, 11, -1, -3, -5)
 l.foldLeft(0)(_ + _) // same as l.foldLeft(0)((a,b) => a + b)
 ```
 
+当`_`用于参数占位符时，`_`不仅能表示单个参数，也能表示整个参数列表
+
+```scala
+scala> val largest = (Integer.MIN_VALUE /: arr) {Math.max(_, _)}
+largest: Int = 30
+
+scala> val largest = (Integer.MIN_VALUE /: arr) {Math.max _}
+largest: Int = 30
+
+val largest = (Integer.MIN_VALUE /: arr) {Math.max}
+```
+
+> `_`表示整个参数列表，也就是(**参数**`1`**, 参数**`2`)。如果只是为了按照同样的顺序将接收到的参数传递给底层的方法，我们甚至不需要`_`这种形式。 
+
+很屌呀 .....太多魔术了 .. 
+
 ### 6.可选项
 
 ```scala
