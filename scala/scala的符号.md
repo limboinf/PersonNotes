@@ -178,3 +178,53 @@ scala> def inc() = print("...")
 inc: ()Unit
 ```
 
+## 7./:
+
+`/:` 等效于`foldLeft`
+
+在scala源码中可以看到
+
+![image-20190511141041084](http://limbo.oss-cn-beijing.aliyuncs.com/2019-05-11-061129.png)
+
+如下求最大值
+
+```scala
+scala> val arr = Array(1,30,2,23)
+arr: Array[Int] = Array(1, 30, 2, 23)
+
+scala> val sum = arr.foldLeft(0) { (sum, elem) => sum + elem }
+sum: Int = 56
+
+// 使用(0 /: arr) 代替 arr.foldLeft(0)
+scala> val sum = (0 /: arr) { (sum, elem) => sum + elem }
+sum: Int = 56
+// 还可以是()
+scala> val sum = (0 /: arr) ( (sum, elem) => sum + elem )
+sum: Int = 56
+
+// 使用参数法占位符更加简洁
+// 在单个变量只出现一次时, 用 _ 更加合适， Python, Golang都是这样设计的
+scala> val sum = (0 /: arr) ( _ + _ )
+sum: Int = 56
+```
+
+在kafka源码中我们应该看到这样的用法：
+
+```scala
+//kafka.api.MockTime.scala
+// make sure that sum of all partitions to all consumers equals total number of partitions
+val totalPartitionsInAssignments = (0 /: assignments) (_ + _.size)
+```
+
+上面关于`foldLeft` 用法
+
+![image-20190511141240184](http://limbo.oss-cn-beijing.aliyuncs.com/2019-05-11-061241.png)
+
+*图片来源:<https://blog.csdn.net/qq_29677083/article/details/84436462>*
+
+
+
+## 8 :\
+
+`:\` 是 foldRight用法
+
