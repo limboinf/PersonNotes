@@ -248,3 +248,8 @@ val totalPartitionsInAssignments = (0 /: assignments) (_ + _.size)
 
 `:\` 是 foldRight用法
 
+## More ...
+
+- [scala中的奇怪的符号](https://www.jianshu.com/p/f22b8dee0dec) 补充了一些其他的符合
+
+
