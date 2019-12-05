@@ -251,5 +251,6 @@ val totalPartitionsInAssignments = (0 /: assignments) (_ + _.size)
 ## More ...
 
 - [scala中的奇怪的符号](https://www.jianshu.com/p/f22b8dee0dec) 补充了一些其他的符合
+- [Scala 特殊符号操作符汇总](https://notes.mengxin.science/2018/09/07/scala-special-symbol-usage/)
 
 
